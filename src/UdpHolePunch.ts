@@ -2,6 +2,7 @@ import { StunServer } from "./StunServer"
 import { HolePunch, NATType } from "./HolePunch"
 import { createSocket, RemoteInfo, Socket } from "dgram"
 import { Logger } from "./Logger"
+import { PromiseHandler } from "./PromiseHandler"
 
 enum DetectState {
     NOT_STARTED,
@@ -28,6 +29,8 @@ export class UdpHolePunch implements HolePunch {
     private stunServer: StunServer
     private socket: Socket
 
+    private socketReady: PromiseHandler<void>
+
     constructor(port: number, ipaddress?: string, stunServers?: string[]) {
         this.ipaddress = ipaddress? ipaddress : "0.0.0.0"
         this.port = port
@@ -42,6 +45,7 @@ export class UdpHolePunch implements HolePunch {
         this.socket.addListener("message", this.onSocketMessage.bind(this))
 
         this.socket.bind(this.port, this.ipaddress)
+        this.socketReady = new PromiseHandler<void>()
     }
 
     private onSocketClose() {
@@ -52,12 +56,15 @@ export class UdpHolePunch implements HolePunch {
         LOGGER.info(`onSocketConnect`)
     }
 
-    private onSocketError() {
-        LOGGER.info(`onSocketError`)
+    private onSocketError(err: Error) {
+        this.socketReady.reject(err)
+        LOGGER.error(`socket bind error:${err.message}`)
+        throw err
     }
 
     private onSocketListening() {
         LOGGER.info(`onSocketListening`)
+        this.socketReady.resolve()
     }
     
     private onSocketMessage(msg: Buffer, rinfo: RemoteInfo) {
@@ -65,6 +72,8 @@ export class UdpHolePunch implements HolePunch {
     }
 
     public async detectNATType() {
+        await this.socketReady.promise
+        
         LOGGER.info(`detectNATType`)
         return NATType.FullCone
     }
