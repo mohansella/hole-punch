@@ -1,3 +1,4 @@
+import chalk, {Chalk} from "chalk";
 import moment from "moment";
 
 
@@ -8,19 +9,21 @@ export class Logger {
     }
 
     public info(message: String) {
-        Logger.log(this.name, "info", message);
+        Logger.log(this.name, "info", message, chalk.white);
     }
 
     public warn(message: String) {
-        Logger.log(this.name, "warn", message);
+        Logger.log(this.name, "warn", message, chalk.yellow);
     }
 
     public error(message: String) {
-        Logger.log(this.name, "error", message);
+        Logger.log(this.name, "error", message, chalk.red);
     }
 
-    private static log(name: String, level: String, message: String) {
-        console.log(`${moment().format("YYYY-MM-DD hh:mm:ss.SSS")}`, `${name}`, `[${level}] ${message}`)
+    private static log(name: String, level: String, message: String, chalkins: Chalk) {
+        let colormsg = chalkins(`[${level}] [${name}] ${message}`)
+        let log = `${moment().format("YYYY-MM-DD hh:mm:ss.SSS")} ${colormsg}`
+        console.log(log)
     }
 
 }
