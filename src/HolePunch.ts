@@ -1,4 +1,5 @@
 export enum NATType {
+    Unknown,
     OpenInternet,
     SymmetricUdpFirewall,
     FullCone,
@@ -7,7 +8,7 @@ export enum NATType {
     Symmetric
 }
 
-interface HolePunch {
+export interface HolePunch {
 
     detectNATType: () => Promise<NATType>;
 
