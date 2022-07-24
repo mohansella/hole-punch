@@ -3,6 +3,7 @@ import { HolePunch, NATType } from "./HolePunch"
 import { createSocket, RemoteInfo, Socket } from "dgram"
 import { Logger } from "./Logger"
 import { PromiseHandler } from "./PromiseHandler"
+import { Utilities } from "./Utilities"
 
 enum DetectState {
     NOT_STARTED,
@@ -14,9 +15,12 @@ enum DetectState {
 class Detector {
 
     private detectState: DetectState = DetectState.NOT_STARTED
+    private txid_string: String
+    private txid_byte: Buffer
 
-    constructor(private socket: Socket, private listener: (t: NATType, err?: Error)=>void) {
-
+    constructor(private socket: Socket) {
+        this.txid_byte = Utilities.getRandomInt128()
+        this.txid_string = Utilities.toDashedString(this.txid_byte)
     }
 
 }
@@ -30,6 +34,7 @@ export class UdpHolePunch implements HolePunch {
     private socket: Socket
 
     private socketReady: PromiseHandler<void>
+
 
     constructor(port: number, ipaddress?: string, stunServers?: string[]) {
         this.ipaddress = ipaddress? ipaddress : "0.0.0.0"
@@ -63,7 +68,7 @@ export class UdpHolePunch implements HolePunch {
     }
 
     private onSocketListening() {
-        LOGGER.info(`onSocketListening`)
+        LOGGER.info(`socket bind success on ${this.ipaddress}:${this.port}`)
         this.socketReady.resolve()
     }
     
@@ -71,10 +76,14 @@ export class UdpHolePunch implements HolePunch {
         LOGGER.info(`onSocketMessage`)
     }
 
-    public async detectNATType() {
+    public async detectNATType() {        
+        //first wait for the socket to be ready
         await this.socketReady.promise
+
+        let detector = new Detector(this.socket)
         
-        LOGGER.info(`detectNATType`)
+
+        LOGGER.info(`detectNATType requested`)
         return NATType.FullCone
     }
     

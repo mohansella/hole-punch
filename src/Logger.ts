@@ -1,5 +1,5 @@
-import chalk, {Chalk} from "chalk";
-import moment from "moment";
+import chalk, {Chalk} from "chalk"
+import moment from "moment"
 
 
 export class Logger {
@@ -9,15 +9,15 @@ export class Logger {
     }
 
     public info(message: String) {
-        Logger.log(this.name, "info", message, chalk.white);
+        Logger.log(this.name, "info", message, chalk.white)
     }
 
     public warn(message: String) {
-        Logger.log(this.name, "warn", message, chalk.yellow);
+        Logger.log(this.name, "warn", message, chalk.yellow)
     }
 
     public error(message: String) {
-        Logger.log(this.name, "error", message, chalk.red);
+        Logger.log(this.name, "error", message, chalk.red)
     }
 
     private static log(name: String, level: String, message: String, chalkins: Chalk) {

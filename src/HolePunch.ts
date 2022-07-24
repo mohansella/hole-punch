@@ -10,6 +10,6 @@ export enum NATType {
 
 export interface HolePunch {
 
-    detectNATType: () => Promise<NATType>;
+    detectNATType: () => Promise<NATType>
 
 }
