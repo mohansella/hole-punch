@@ -1,9 +1,9 @@
-import { StunServer } from "./StunServer"
-import { HolePunch, NATType } from "./HolePunch"
+import { StunServer } from "../stun/StunServer"
+import { HolePunch, NATType } from "../HolePunch"
 import { createSocket, RemoteInfo, Socket } from "dgram"
-import { Logger } from "./Logger"
-import { PromiseHandler } from "./PromiseHandler"
-import { Utilities } from "./Utilities"
+import { Logger } from "../logger/Logger"
+import { PromiseHandler } from "../utils/PromiseHandler"
+import { Utilities } from "../utils/Utilities"
 
 enum DetectState {
     NOT_STARTED,

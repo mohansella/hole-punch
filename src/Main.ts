@@ -1,5 +1,5 @@
-import { StunServer } from "./StunServer"
-import { UdpHolePunch } from "./UdpHolePunch"
+import { StunServer } from "./holepunch/stun/StunServer"
+import { UdpHolePunch } from "./holepunch/udp/UdpHolePunch"
 
 class Main {
     

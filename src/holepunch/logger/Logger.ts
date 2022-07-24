@@ -1,7 +1,6 @@
 import chalk, {Chalk} from "chalk"
 import moment from "moment"
 
-
 export class Logger {
 
     public constructor(private name: String) {
